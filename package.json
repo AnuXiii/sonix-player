@@ -8,9 +8,12 @@
 	"types": "dist/sonix-player.d.ts",
 	"style": "dist/sonix-player.css",
 	"exports": {
-		"import": "./dist/sonix-player.es.js",
-		"require": "./dist/sonix-player.umd.js",
-		"style": "./dist/sonix-player.css"
+		".": {
+			"import": "./dist/sonix-player.es.js",
+			"require": "./dist/sonix-player.umd.js",
+			"style": "./dist/sonix-player.css"
+		},
+		"./style.css": "./dist/sonix-player.css"
 	},
 	"files": [
 		"dist",
