@@ -56,7 +56,7 @@ Use the component anywhere in your app (HTML syntax):
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sonix Player</title>
-  <link rel="stylesheet" href="https://unpkg.com/sonix-player@1.0.6/dist/sonix-player.css" />
+  <link rel="stylesheet" href="https://unpkg.com/sonix-player@1.0.7/dist/sonix-player.css" />
 </head>
 <body>
     <c-audio
@@ -76,7 +76,7 @@ Use the component anywhere in your app (HTML syntax):
                     data-secondary="oklch(96.9% 0.016 293.756)">
     </c-audio>
 
-  <script type="module" src="https://unpkg.com/sonix-player@1.0.6/dist/sonix-player.es.js"></script>
+  <script type="module" src="https://unpkg.com/sonix-player@1.0.7/dist/sonix-player.es.js"></script>
 </body>
 </html>
 
@@ -144,8 +144,8 @@ npm run build
 
 # 📦 CDN & UNPKG
 
-ES Module: https://unpkg.com/sonix-player@1.0.6/dist/sonix-player.es.js
-CSS File: https://unpkg.com/sonix-player@1.0.6/dist/sonix-player.css
+ES Module: https://unpkg.com/sonix-player@1.0.7/dist/sonix-player.es.js
+CSS File: https://unpkg.com/sonix-player@1.0.7/dist/sonix-player.css
 
 <br>
 
