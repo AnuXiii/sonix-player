@@ -9,9 +9,9 @@
 	"style": "dist/sonix-player.css",
 	"exports": {
 		".": {
+			"style": "./dist/sonix-player.css",
 			"import": "./dist/sonix-player.es.js",
-			"require": "./dist/sonix-player.umd.js",
-			"style": "./dist/sonix-player.css"
+			"require": "./dist/sonix-player.umd.js"
 		},
 		"./style.css": "./dist/sonix-player.css"
 	},

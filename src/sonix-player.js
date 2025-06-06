@@ -31,7 +31,7 @@ let isDraggingTime = false;
 // keep track when user is dragging in the volume control
 let isDraggingVol = false;
 
-class AudioPlayer extends HTMLElement {
+export class AudioPlayer extends HTMLElement {
 	connectedCallback() {
 		// check if this element wants to auto-play
 		if (this.dataset.auto === "true") {
@@ -489,5 +489,3 @@ class AudioPlayer extends HTMLElement {
 }
 
 customElements.define("c-audio", AudioPlayer);
-
-export default AudioPlayer;
