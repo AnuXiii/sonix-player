@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link
+			rel="icon"
+			type="image/svg+xml"
+			href="/vite.svg" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>Test</title>
+		<link
+			rel="stylesheet"
+			href="/src/style.css" />
+	</head>
+	<body>
+		<!-- for testing -->
+		<div id="app">
+			<!-- for testing -->
+			<c-audio
+				data-src="/default-music.mp3"
+				data-thumbnail=""
+				data-figure="/default-cover.png"
+				data-artist=""
+				data-name=""
+				data-auto="false"
+				data-volume="true"
+				data-repeat="true"
+				data-speed="true"
+				data-max=""
+				data-download="true"
+				data-accent=""
+				data-primary=""
+				data-secondary=""></c-audio>
+			<c-audio
+				data-src="/phonk.mp4"
+				data-thumbnail="/phonk.jpg"
+				data-figure="/phonk.jpg"
+				data-artist="phonk"
+				data-name="phonk music"
+				data-auto="false"
+				data-volume="true"
+				data-repeat="true"
+				data-speed="true"
+				data-max="3"
+				data-download="true"
+				data-accent="oklch(58.6% 0.253 17.585)"
+				data-primary="oklch(21% 0.006 285.885)"
+				data-secondary="oklch(96.9% 0.016 293.756)"></c-audio>
+		</div>
+		<script
+			type="module"
+			src="/src/sonix-player.js"></script>
+	</body>
+</html>

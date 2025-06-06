@@ -1,0 +1,199 @@
+@import "tailwindcss";
+
+/* audio player default theme */
+@theme {
+	--color-black: #121212;
+	--color-accent: #fff;
+	--color-primary: #303030;
+	--color-secondary: #ff4600;
+}
+
+@layer base {
+	button:focus-visible {
+		@apply outline-2 outline-solid outline-secondary;
+	}
+}
+
+/* audio container */
+.c-audio {
+	@apply text-accent bg-primary select-none;
+	@apply max-w-4xl mx-auto my-8 rounded-lg shadow-2xl;
+}
+
+.thumbnail-img {
+	@apply relative py-8 rounded-t-lg overflow-hidden;
+
+	img {
+		@apply w-40 h-40 object-cover mx-auto rounded-lg drop-shadow-2xl drop-shadow-black;
+	}
+}
+
+.thumbnail-filter {
+	@apply absolute inset-0 rounded-t-lg bg-cover bg-no-repeat scale-150 blur-xs;
+}
+
+.c-audio-inner {
+	@apply flex flex-col justify-between items-center md:flex-row;
+
+	& > * {
+		@apply w-full md:w-auto;
+	}
+
+	.audio-info {
+		@apply p-4 md:p-0;
+	}
+
+	.vol-speed {
+		@apply max-md:hidden;
+	}
+}
+
+/* button holders play & repeat & volume ... */
+.btn-holder {
+	@apply relative p-4;
+
+	button:not(.play-btn) {
+		@apply flex justify-center items-center relative cursor-pointer;
+
+		&:hover:not(.active) {
+			@apply text-accent/70;
+
+			.icon svg {
+				@apply fill-accent/70;
+			}
+		}
+
+		.icon {
+			svg {
+				@apply size-6 fill-accent;
+			}
+		}
+	}
+}
+
+/* play & pause button */
+.play-btn {
+	@apply p-2 bg-accent text-primary rounded-full overflow-hidden flex justify-center items-center relative cursor-pointer size-12;
+
+	.icon {
+		@apply duration-300 absolute flex justify-center items-center;
+
+		svg {
+			@apply size-8 fill-primary;
+		}
+
+		&:nth-child(2) {
+			@apply opacity-0 translate-y-full;
+		}
+	}
+
+	&:hover:not(.is-playing),
+	&.is-playing {
+		.icon {
+			@apply opacity-0 -translate-y-full;
+
+			&:nth-child(2) {
+				@apply opacity-100 translate-y-0;
+			}
+		}
+	}
+
+	&.is-playing {
+		@apply bg-secondary;
+
+		svg {
+			@apply fill-accent;
+		}
+	}
+}
+
+/* audio timeline container - inner - outer */
+.timeline-container {
+	@apply p-4 flex justify-center items-center gap-4 font-semibold;
+}
+
+.timeline-outer {
+	@apply relative w-full h-1.5 rounded-lg bg-white/30 cursor-pointer;
+
+	&:hover {
+		.timeline-inner::after {
+			scale: 1;
+			opacity: 1;
+		}
+	}
+}
+
+.timeline-inner {
+	@apply absolute left-0 w-0 h-[inherit] rounded-[inherit] bg-secondary;
+
+	&::after {
+		@apply content-[""] absolute right-[-8px] top-[-3px] w-3 h-3 rounded-full;
+		@apply bg-primary border border-solid border-secondary;
+		@apply duration-200 scale-0 opacity-0;
+	}
+}
+
+/* style custom range input */
+.btn-holder:focus-visible .custom-range,
+.btn-holder:hover .custom-range {
+	@apply py-4 px-3;
+	width: 128px;
+	opacity: 1;
+	scale: 1;
+}
+
+.custom-range {
+	@apply bg-black w-0 h-10 rounded-lg shadow-2xl cursor-pointer border border-solid border-accent/30 flex justify-center items-center duration-100 scale-0 opacity-0 overflow-hidden;
+}
+
+.custom-range-outer {
+	@apply relative bg-primary w-full h-full rounded-full;
+}
+
+.custom-range-inner {
+	@apply absolute bg-accent w-full h-full rounded-full;
+
+	&::after {
+		@apply content-[""] absolute top-[-5px] right-[-5px] w-4 h-4 duration-200 bg-black border border-solid border-accent rounded-full;
+	}
+}
+
+.speed-btn {
+	.icon {
+		@apply flex items-center gap-0.5;
+	}
+}
+
+/* audio info styles => artist name - song name - figure image */
+.audio-info {
+	@apply py-4 flex gap-4 items-center;
+}
+
+.figure-img {
+	@apply w-12 h-12;
+
+	img {
+		@apply object-cover aspect-square min-w-12 min-h-12 rounded-md drop-shadow-lg drop-shadow-black;
+	}
+}
+
+.text-info {
+	@apply flex flex-col text-sm;
+
+	[data-artist] {
+		@apply text-accent/70 max-w-20 truncate text-ellipsis;
+	}
+
+	[data-name] {
+		@apply font-semibold max-w-20 truncate text-ellipsis;
+	}
+}
+
+/* for active class on controls */
+.btn-holder button.active {
+	.icon {
+		svg {
+			@apply fill-secondary;
+		}
+	}
+}

@@ -1,0 +1,52 @@
+{
+	"name": "sonix-player",
+	"private": false,
+	"version": "1.0.5",
+	"type": "module",
+	"main": "dist/sonix-player.umd.js",
+	"module": "dist/sonix-player.es.js",
+	"types": "dist/sonix-player.d.ts",
+	"style": "dist/sonix-player.css",
+	"exports": {
+		"import": "./dist/sonix-player.es.js",
+		"require": "./dist/sonix-player.umd.js",
+		"style": "./dist/sonix-player.css"
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"prepublishOnly": "npm run build"
+	},
+	"devDependencies": {
+		"vite": "^6.3.5",
+		"@tailwindcss/vite": "^4.1.8",
+		"ionicons": "^8.0.9",
+		"tailwindcss": "^4.1.8"
+	},
+	"dependencies": {
+		"@tailwindcss/vite": "^4.1.8",
+		"ionicons": "^8.0.9",
+		"tailwindcss": "^4.1.8"
+	},
+	"description": "A modern, customizable audio player web component with support for thumbnails, speed control, and volume management",
+	"keywords": [
+		"audio-player",
+		"web-component",
+		"component",
+		"html-player",
+		"player",
+		"custom-element"
+	],
+	"author": "anuxi",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/AnuXiii/sonix-player"
+	},
+	"sideEffects": false
+}
