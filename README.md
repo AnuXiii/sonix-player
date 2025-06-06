@@ -15,13 +15,40 @@ It’s designed to be lightweight, framework-agnostic, and flexible — ready to
 npm install sonix-player
 ```
 
-# 📦 Usage
+# 🧩 Framework Integration Guide (Vite, React, Vue)
 
-# Vite / React / Vue
+Sonix Player is built as a Web Component, which makes it super easy to use in any modern JavaScript framework like React, Vue, or apps powered by Vite.
 
-// main.js or App.js
-import 'sonix-player/dist/sonix-player.css';
-import 'sonix-player'; // Automatically registers the <c-audio> custom element
+## 📦 1. Installation
+
+Install the package via npm:
+
+```bash
+    npm install sonix-player
+```
+
+## 🧠 2. Usage in Vite
+
+In your main.js or main.ts file:
+
+```bash
+    import 'sonix-player';
+    import 'sonix-player/dist/sonix-player.css';
+```
+
+Use the component anywhere in your app (HTML syntax):
+
+```bash
+    <c-audio
+        data-src="/audio/song.mp3"
+        data-thumbnail="/images/cover.jpg"
+        data-name="My Song"
+    ></c-audio>
+```
+
+<br>
+
+## 🧪 Example
 
 <!DOCTYPE html>
 <html lang="en">
@@ -53,6 +80,8 @@ import 'sonix-player'; // Automatically registers the <c-audio> custom element
 </body>
 </html>
 
+<br>
+
 # ⚙️ Features
 
 ✅ Lightweight & fast
@@ -73,6 +102,8 @@ import 'sonix-player'; // Automatically registers the <c-audio> custom element
 
 💡 Web Component – works anywhere!
 
+<br>
+
 # 📂 Attributes
 
 | Attribute        | Description                        | Example                 |
@@ -92,6 +123,8 @@ import 'sonix-player'; // Automatically registers the <c-audio> custom element
 | `data-primary`   | Player primary color               | `#fff - oklch(0 0 0 0)` |
 | `data-seconadry` | Player seconadry color             | `#fff - oklch(0 0 0 0)` |
 
+<br>
+
 # 🛠️ Development
 
 To clone and run locally:
@@ -101,14 +134,20 @@ cd sonix-player
 npm install
 npm run dev
 
+<br>
+
 # To build for production:
 
 npm run build
+
+<br>
 
 # 📦 CDN & UNPKG
 
 ES Module: https://unpkg.com/sonix-player@1.0.4/dist/sonix-player.es.js
 CSS File: https://unpkg.com/sonix-player@1.0.4/dist/sonix-player.css
+
+<br>
 
 # 📄 License
 
