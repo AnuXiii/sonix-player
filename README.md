@@ -144,8 +144,7 @@ npm run build
 
 # 📦 CDN & UNPKG
 
-ES Module: https://unpkg.com/sonix-player@1.1.0/dist/sonix-player.es.js
-CSS File: https://unpkg.com/sonix-player@1.1.0/dist/sonix-player.css
+Get the Last Version : https://app.unpkg.com/sonix-player
 
 <br>
 

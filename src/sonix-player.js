@@ -263,17 +263,18 @@ export class AudioPlayer extends HTMLElement {
 				const isCurrentlyPaused = playButton.classList.contains("is-playing");
 
 				if (!isCurrentlyPaused) {
-					// Pause all other audio elements
+					// Pause all other audio elements and reset their buttons
 					allAudioElements.forEach((audio) => {
 						if (audio !== audioElement) {
 							audio.pause();
+							// Find the play button for this audio element
+							const otherPlayButton = audio.closest("c-audio")?.querySelector(".play-btn");
+							if (otherPlayButton) {
+								otherPlayButton.classList.remove("is-playing");
+							}
 						}
 					});
-					// Remove paused class from all play buttons
-					document.querySelectorAll("c-audio .play-btn").forEach((btn) => {
-						btn.classList.remove("is-playing");
-					});
-					// Add paused class only to the current button
+					// Add playing class to current button
 					playButton.classList.add("is-playing");
 					if (audioElement.duration) {
 						audioElement.play();
