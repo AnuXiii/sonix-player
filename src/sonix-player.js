@@ -70,8 +70,8 @@ export class AudioPlayer extends HTMLElement {
 		};
 
 		const textDisplays = {
-			artist: this.dataset.artist || "default",
-			name: this.dataset.name || "default",
+			artist: this.dataset.artist || "",
+			name: this.dataset.name || "",
 		};
 
 		const controls = {
@@ -214,12 +214,18 @@ export class AudioPlayer extends HTMLElement {
 						<!--  -->
 						<div class="flex justify-between items-center flex-1">
 							<div class="audio-info">
+							${
+								cover.figure !== ""
+									? `
 								<div class="figure-img">
-									<img src="${cover.figure}" alt="${textDisplays.name}" loading="lazy" />
+									<img src="${cover.figure}" alt="${textDisplays.name || ""}" loading="lazy" />
 								</div>
+								`
+									: ""
+							}
 								<div class="text-info">
-									<span data-artist>${textDisplays.artist}</span>
-									<span data-name>${textDisplays.name}</span>
+									${textDisplays.artist !== "" ? `<span data-artist>${textDisplays.artist}</span>` : ""}
+									${textDisplays.name !== "" ? `<span data-name>${textDisplays.name}</span>` : ""}
 								</div>
 							</div>
 							<!--  -->
