@@ -18,36 +18,39 @@
 		<!-- for testing -->
 		<div id="app">
 			<!-- for testing -->
-			<c-audio
-				data-src="/default.mp3"
-				data-thumbnail="/default-cover.png"
-				data-figure="/default-cover.png"
-				data-artist="mahdi"
-				data-name="rostami"
-				data-auto="false"
-				data-volume="true"
-				data-repeat="true"
-				data-speed="true"
-				data-max="4"
-				data-download="true"
-				data-accent="#ccc"
-				data-primary="#f50"
-				data-secondary="#fff"></c-audio>
-			<c-audio
+			<sonix-player
 				data-src="/phonk.mp4"
 				data-thumbnail="/phonk.jpg"
 				data-figure="/phonk.jpg"
-				data-artist="phonk"
-				data-name="phonk music"
+				data-artist="phonk music"
+				data-name="phonk"
 				data-auto="false"
 				data-volume="true"
 				data-repeat="true"
 				data-speed="true"
 				data-max="3"
 				data-download="true"
+				data-black="#121212"
 				data-accent="oklch(58.6% 0.253 17.585)"
 				data-primary="oklch(21% 0.006 285.885)"
-				data-secondary="oklch(96.9% 0.016 293.756)"></c-audio>
+				data-secondary="oklch(96.9% 0.016 293.756)"></sonix-player>
+
+			<sonix-player
+				data-src="/default.mp3"
+				data-thumbnail="/default-cover.png"
+				data-figure="/default-cover.png"
+				data-artist="default music"
+				data-name="default"
+				data-auto="true"
+				data-volume="true"
+				data-repeat="true"
+				data-speed="true"
+				data-max="3"
+				data-download="true"
+				data-black="#121212"
+				data-accent="oklch(58.6% 0.253 17.585)"
+				data-primary="oklch(21% 0.006 285.885)"
+				data-secondary="oklch(96.9% 0.016 293.756)"></sonix-player>
 		</div>
 		<script
 			type="module"

@@ -1,5 +1,6 @@
 import "./style.css";
 
+// import ion-icons used icons
 import {
 	play,
 	pause,
@@ -16,40 +17,43 @@ function iconSpliter(iconName) {
 	return iconName.split(",")[1];
 }
 
-// check any audio is Playing or not
+// Check any audio is Playing or not
 let isPlaying = false;
 
-// keep track of which audio player has auto-play enabled
+// Keep track of which audio player has auto-play enabled
 let currentAutoPlayElement = null;
 
-// keep track of all audio elements
+// Keep track of all audio elements
 let allAudioElements = [];
 
-// keep track when user is dragging in the timeline container
+// Keep track when user is dragging in the timeline container
 let isDraggingTime = false;
 
-// keep track when user is dragging in the volume control
+// Keep track when user is dragging in the volume control
 let isDraggingVol = false;
 
-export class AudioPlayer extends HTMLElement {
+export class SonixPlayer extends HTMLElement {
 	connectedCallback() {
-		// check if this element wants to auto-play
+		// Check if this element wants to auto-play
 		if (this.dataset.auto === "true") {
-			// if there's already an auto-play element, disable it
+			// IF there's already an auto-play element, disable it
 			if (currentAutoPlayElement && currentAutoPlayElement !== this) {
 				currentAutoPlayElement.dataset.auto = "false";
-				console.warn("only one c-audio element can have data-auto attribute, please fix it");
+				console.warn("only one sonix-player element in current page can have data-auto attribute, please fix it");
 			}
-			// set this element as the current auto-play element
+			// Set this element as the current auto-play element
 			currentAutoPlayElement = this;
 		}
 
+		// Set audio src with data-src attribute
 		const audioSrc = this.dataset.src || "";
 		const audioElement = document.createElement("audio");
 		audioElement.src = audioSrc;
-		// add this audio element to our tracking array
+
+		// Add this audio element to our tracking array
 		allAudioElements.push(audioElement);
 
+		// Function to calculating audio minutes and seconds
 		function durationLoader() {
 			if (audioElement.duration) {
 				const totalSeconds = Math.floor(audioElement.duration);
@@ -59,76 +63,96 @@ export class AudioPlayer extends HTMLElement {
 				// Format time as MM:SS
 				return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 			} else {
+				// IF audio duration have a problem return this
 				console.warn("No audio duration found. Please check data-src attribute");
 				return "00:00";
 			}
 		}
 
+		// Set thumbnail and figure data-thumbnail="/images/default.png" & data-figure="/images/default.png"
 		const cover = {
 			thumbnail: this.dataset.thumbnail || "",
 			figure: this.dataset.figure || "",
 		};
 
+		// Set artist and track name data-artist="text" & data-name="text"
 		const textDisplays = {
 			artist: this.dataset.artist || "",
 			name: this.dataset.name || "",
 		};
 
+		// Set audio autoplay - volume - repeat Controls true or false
 		const controls = {
 			autoPlay: this.dataset.auto || "false",
 			volumeControl: this.dataset.volume || "true",
 			repeat: this.dataset.repeat || "true",
 		};
 
+		// Set speed Control data-speed="true" & data-speed="number"
 		const speedControl = {
 			speed: this.dataset.speed || "true",
 			minSpeed: 1,
 			maxSpeed: this.dataset.max || "2",
 		};
 
+		// Set showing download button or not true or false
 		const canDownload = this.dataset.download || "true";
 
-		// set audio player theme colors like this sytanx => data-accent="#f50"
+		// Set audio player theme colors catching like this syntax => data-accent="#f50"
 		const setPlayerTheme = () => {
-			const accent = this.dataset.accent || document.documentElement.style.getPropertyValue("--color-accent");
-			const primary = this.dataset.primary || document.documentElement.style.getPropertyValue("--color-primary");
-			const secondary = this.dataset.secondary || document.documentElement.style.getPropertyValue("--color-secondary");
+			const black = this.dataset.black || document.documentElement.style.getPropertyValue("--color-sonix-black");
+			const accent = this.dataset.accent || document.documentElement.style.getPropertyValue("--color-sonix-accent");
+			const primary = this.dataset.primary || document.documentElement.style.getPropertyValue("--color-sonix-primary");
+			const secondary =
+				this.dataset.secondary || document.documentElement.style.getPropertyValue("--color-sonix-secondary");
 
 			// Set CSS custom properties for the component
-			this.style.setProperty("--color-accent", accent);
-			this.style.setProperty("--color-primary", primary);
-			this.style.setProperty("--color-secondary", secondary);
+			this.style.setProperty("--color-sonix-black", black);
+			this.style.setProperty("--color-sonix-accent", accent);
+			this.style.setProperty("--color-sonix-primary", primary);
+			this.style.setProperty("--color-sonix-secondary", secondary);
 		};
 
 		// Call setPlayerTheme before setting innerHTML
 		setPlayerTheme();
 
 		this.innerHTML = /*html*/ `
-			<div class="c-audio">
+			<div class="sonix-player">
 				<!--  -->
 				${
-					cover.thumbnail.trim() !== ""
+					cover.thumbnail !== ""
 						? `
-					<div class="thumbnail-img">
-						<div class="thumbnail-filter" style="background-image:url(${cover.thumbnail})"></div>
-						<img src="${cover.thumbnail}" alt="${textDisplays.name}" loading="lazy"/>
+					<div class="sonix-thumbnail-container">
+						<div class="sonix-thumbnail-filter" style="background-image:url(${cover.thumbnail})"></div>
+						<img class="sonix-thumbnail-img" src="${cover.thumbnail}" alt="${textDisplays.name}" loading="lazy"/>
+						<div class="sonix-loader">
+							<div class="sonix-loader-inner">
+								<div class="sonix-line h-7"></div>
+								<div class="sonix-line h-4"></div>
+								<div class="sonix-line h-8"></div>
+								<div class="sonix-line h-10"></div>
+								<div class="sonix-line h-8"></div>
+								<div class="sonix-line h-4"></div>
+								<div class="sonix-line h-7"></div>
+							</div>
+						</div>
 					</div>	
 				`
 						: ""
 				}
-
-				<div class="c-audio-inner">
+				<!--  -->
+				<div class="sonix-inner">
 					<div class="flex items-center">
-						<div class="btn-holder">
+						<div class="sonix-btn-holder">
 								<button
-									class="play-btn"
+									class="sonix-play-btn"
 									title="Play current"
 									aria-label="Play current"
 									tabindex="0">
-									<span class="icon">
+									<span class="sonix-icon">
 										${iconSpliter(play)}
 									</span>
-									<span class="icon">
+									<span class="sonix-icon">
 										${iconSpliter(pause)}
 									</span>
 								</button>
@@ -137,13 +161,13 @@ export class AudioPlayer extends HTMLElement {
 						${
 							controls.repeat == "true"
 								? `
-							<div class="btn-holder col-span-1">
+							<div class="sonix-btn-holder col-span-1">
 								<button
-									class="repeat-btn" 
+									class="sonix-repeat-btn" 
 									title="Repeat current"
 									aria-label="Repeat current"
 									tabindex="0">
-									<span class="icon">
+									<span class="sonix-icon">
 										${iconSpliter(repeatOutline)}
 									</span>
 								</button>
@@ -153,37 +177,37 @@ export class AudioPlayer extends HTMLElement {
 						}
 					</div>
 						<!--  -->
-						<div class="timeline-container flex-2">
-							<div class="current-time">
-								<span>${audioElement.currentTime}:00</span>
+						<div class="sonix-timeline-container flex-2">
+							<div class="sonix-current-time-container">
+								<span class="sonix-current-time-value">${audioElement.currentTime}:00</span>
 							</div>
-							<div class="timeline-outer">
-								<div class="timeline-inner"></div>
+							<div class="sonix-timeline-outer">
+								<div class="sonix-timeline-inner"></div>
 							</div>
-							<div class="duration">
-								<span></span>
+							<div class="sonix-duration-container">
+								<span class="sonix-duration-value">0:00</span>
 							</div>
 						</div>
 						<!--  -->
-						<div class="flex items-center vol-speed">
+						<div class="flex items-center sonix-vol-speed">
 							${
 								controls.volumeControl == "true"
 									? `
-								<div class="btn-holder flex gap-4">
+								<div class="sonix-btn-holder flex gap-4">
 									<button
-										class="volume-btn"
+										class="sonix-volume-btn"
 										title="Control volume"
 										aria-label="Control volume"
 										tabindex="0">
-										<span class="icon">
+										<span class="sonix-icon">
 											${iconSpliter(volumeHigh)}
 										</span>
 									</button>
 									<div
-										class="custom-range"
+										class="sonix-custom-range"
 										data-value="100">
-										<div class="custom-range-outer">
-											<div class="custom-range-inner"></div>
+										<div class="sonix-custom-range-outer">
+											<div class="sonix-custom-range-inner"></div>
 										</div>
 									</div>
 								</div>
@@ -194,15 +218,15 @@ export class AudioPlayer extends HTMLElement {
 							${
 								speedControl.speed == "true"
 									? `
-								<div class="btn-holder">
+								<div class="sonix-btn-holder">
 									<button
-										class="speed-btn"
+										class="sonix-speed-btn"
 										title="Control speed"
 										aria-label="Control speed"
 										tabindex="0"
 										data-value="1">
-										<span class="icon">
-											<span>1x</span>
+										<span class="sonix-icon">
+											<span class="sonix-speed-value">1x</span>
 											${iconSpliter(playForwardOutline)}
 										</span>
 									</button>
@@ -213,32 +237,43 @@ export class AudioPlayer extends HTMLElement {
 						</div>
 						<!--  -->
 						<div class="flex justify-between items-center flex-1">
-							<div class="audio-info">
+							<div class="sonix-info">
 							${
 								cover.figure !== ""
 									? `
-								<div class="figure-img">
-									<img src="${cover.figure}" alt="${textDisplays.name || ""}" loading="lazy" />
+								<div class="sonix-figure-container">
+									<img class="sonix-figure-img" src="${cover.figure}" alt="${textDisplays.name || ""}" loading="lazy" />
+									<div class="sonix-loader">
+										<div class="sonix-loader-inner">
+											<div class="sonix-line h-7"></div>
+											<div class="sonix-line h-4"></div>
+											<div class="sonix-line h-8"></div>
+											<div class="sonix-line h-10"></div>
+											<div class="sonix-line h-8"></div>
+											<div class="sonix-line h-4"></div>
+											<div class="sonix-line h-7"></div>
+										</div>
+									</div>
 								</div>
 								`
 									: ""
 							}
-								<div class="text-info">
-									${textDisplays.artist !== "" ? `<span data-artist>${textDisplays.artist}</span>` : ""}
-									${textDisplays.name !== "" ? `<span data-name>${textDisplays.name}</span>` : ""}
+								<div class="sonix-text-info">
+									${textDisplays.artist !== "" ? `<span class="sonix-artist">${textDisplays.artist}</span>` : ""}
+									${textDisplays.name !== "" ? `<span class="sonix-name">${textDisplays.name}</span>` : ""}
 								</div>
 							</div>
 							<!--  -->
 							${
 								canDownload == "true"
 									? `
-								<div class="btn-holder">
+								<div class="sonix-btn-holder">
 									<button
-										class="download-btn"
+										class="sonix-download-btn"
 										title="Download audio"
 										aria-label="Download audio"
 										tabindex="0">
-										<span class="icon">
+										<span class="sonix-icon">
 											${iconSpliter(cloudDownload)}
 										</span>
 									</button>
@@ -253,9 +288,9 @@ export class AudioPlayer extends HTMLElement {
 
 		// when data fully loaded catch audio duration and control autoplay audio if true or false
 		window.addEventListener("load", () => {
-			this.querySelector(".duration span").innerHTML = durationLoader();
+			this.querySelector(".sonix-duration-value").innerHTML = durationLoader();
 
-			// audio Global Status
+			// Audio status
 			function audioStatus(status, doing) {
 				isPlaying = status;
 				playButton.title = `${doing} current`;
@@ -263,10 +298,14 @@ export class AudioPlayer extends HTMLElement {
 			}
 
 			// Initialize Play & Pause Control
-			const playButton = this.querySelector(".play-btn");
+			const playButton = this.querySelector(".sonix-play-btn");
 
 			playButton.addEventListener("click", () => {
-				const isCurrentlyPaused = playButton.classList.contains("is-playing");
+				const isCurrentlyPaused = playButton.classList.contains("sonix-is-playing");
+
+				// if user clicked on play button and have't data-auto="true" attribute we stopping auto-play another audio
+				const autoPlayTarget = document.querySelector("[data-auto='true']");
+				autoPlayTarget ? autoPlayTarget.setAttribute("data-auto", "false") : console.warn("auto-play disabled");
 
 				if (!isCurrentlyPaused) {
 					// Pause all other audio elements
@@ -275,27 +314,27 @@ export class AudioPlayer extends HTMLElement {
 							audio.pause();
 						}
 					});
-					// Remove paused class from all play buttons
-					document.querySelectorAll("c-audio .play-btn").forEach((btn) => {
-						btn.classList.remove("is-playing");
+					// Remove sonix-is-playing class from all play buttons
+					document.querySelectorAll(".sonix-player .sonix-play-btn").forEach((btn) => {
+						btn.classList.remove("sonix-is-playing");
 					});
-					// Add paused class only to the current button
-					playButton.classList.add("is-playing");
+					// Add sonix-is-playing class only to the current button
+					playButton.classList.add("sonix-is-playing");
 					if (audioElement.duration) {
 						audioElement.play();
 					}
 					audioStatus(true, "Pause");
 				} else {
-					playButton.classList.remove("is-playing");
+					playButton.classList.remove("sonix-is-playing");
 					audioElement.pause();
 					audioStatus(false, "Play");
 				}
 			});
 
 			// Initialize Repeat
-			const repeatButton = this.querySelector(".repeat-btn");
+			const repeatButton = this.querySelector(".sonix-repeat-btn");
 			repeatButton?.addEventListener("click", () => {
-				const isRepeat = repeatButton.classList.toggle("active");
+				const isRepeat = repeatButton.classList.toggle("sonix-active");
 				if (isRepeat) {
 					audioElement.loop = true;
 				} else {
@@ -304,46 +343,53 @@ export class AudioPlayer extends HTMLElement {
 			});
 
 			// Initialize Audio Time
-			const currentTime = this.querySelector(".current-time span");
-			const timelineOuter = this.querySelector(".timeline-outer");
-			const timelineInner = this.querySelector(".timeline-inner");
+			const currentTime = this.querySelector(".sonix-current-time-value");
+			const timelineOuter = this.querySelector(".sonix-timeline-outer");
+			const timelineInner = this.querySelector(".sonix-timeline-inner");
 
+			// add timeupdate event to all audio elements
 			audioElement.addEventListener("timeupdate", () => {
+				// calculating audio current time and duration
 				let percent = (audioElement.currentTime / audioElement.duration) * 100;
 				const audioCurrentTime = Math.floor(audioElement.currentTime);
 
 				const minutes = Math.floor(audioCurrentTime / 60);
 				const seconds = Math.floor(audioCurrentTime % 60);
 
+				// formating seconds and minutes
 				if (audioCurrentTime) {
 					const formatSeconds = seconds < 10 ? `0${seconds}` : seconds;
 					currentTime.innerHTML = minutes + ":" + formatSeconds;
 				}
 
+				// add number value to width of the timeline inner
 				timelineInner.style.width = `${percent}%`;
 
+				// if current time and duration are equal sonix-is-playing removed and audio status changed
 				if (audioElement.currentTime === audioElement.duration) {
+					// if loop activated keep playing current the sound
 					if (audioElement.loop === true) {
 						audioStatus(true, "Pause");
 					} else {
+						// if loop not activated stopping the current sound
 						audioStatus(false, "Play");
-						playButton.classList.toggle("is-playing");
+						playButton.classList.toggle("sonix-is-playing");
 					}
 				}
 			});
 
 			// Initialize volume control
-			const volumeButton = this.querySelector(".volume-btn");
-			const volumeIcon = this.querySelector(".volume-btn .icon");
-			const customRange = this.querySelector(".custom-range");
-			const customRangeInner = this.querySelector(".custom-range-inner");
+			const volumeButton = this.querySelector(".sonix-volume-btn");
+			const volumeIcon = volumeButton?.querySelector(".sonix-icon");
+			const customRange = this.querySelector(".sonix-custom-range");
+			const customRangeInner = this.querySelector(".sonix-custom-range-inner");
 
 			// Set initial volume
 			if (volumeButton) {
 				audioElement.volume = 1;
 				customRangeInner.style.width = "100%";
 
-				// Handle volume button click
+				// Handle volume button click - unmute or muted
 				volumeButton.addEventListener("click", () => {
 					if (!audioElement.muted) {
 						audioElement.volume = 0;
@@ -385,6 +431,7 @@ export class AudioPlayer extends HTMLElement {
 				});
 			}
 
+			// control sound volume based on mouse listener
 			function controlVolume(e) {
 				const rect = customRange.getBoundingClientRect();
 				const width = rect.width;
@@ -410,9 +457,14 @@ export class AudioPlayer extends HTMLElement {
 			}
 
 			// Handle Audio Speed Controls
-			const speedButton = this.querySelector(".speed-btn");
+			const speedButton = this.querySelector(".sonix-speed-btn");
 			speedButton?.addEventListener("click", handleSpeed);
 
+			/**
+			 * This function retrieves the current playback speed from the speed button's dataset,
+			 * increments it by 0.5 (or resets to the minimum speed if the maximum is reached),
+			 * updates the audio element's playback rate, and updates the displayed speed value.
+			 */
 			function handleSpeed() {
 				let currentSpeed = parseFloat(speedButton.dataset.value);
 				currentSpeed = currentSpeed >= parseFloat(speedControl.maxSpeed) ? speedControl.minSpeed : currentSpeed + 0.5;
@@ -422,12 +474,12 @@ export class AudioPlayer extends HTMLElement {
 				audioElement.playbackRate = currentSpeed;
 
 				// Update speed display
-				speedButton.querySelector(".icon span").textContent = `${currentSpeed}x`;
+				speedButton.querySelector(".sonix-speed-value").textContent = `${currentSpeed}x`;
 			}
 
 			// Control download button
 			if (audioElement.duration) {
-				this.querySelector(".download-btn")?.addEventListener("click", () => {
+				this.querySelector(".sonix-download-btn")?.addEventListener("click", () => {
 					if (canDownload == "true") {
 						const a = document.createElement("a");
 						a.href = audioElement.src;
@@ -436,10 +488,10 @@ export class AudioPlayer extends HTMLElement {
 					}
 				});
 			} else {
-				console.warn("audio source not found check data-src");
+				console.warn("audio source not found check data-src please");
 			}
 
-			// Update audio time based on click and mouse move in timeline container
+			// Update audio time based on click and mouse listener in timeline container
 			let mouseMoveHandler;
 			let mouseUpHandler;
 
@@ -465,6 +517,13 @@ export class AudioPlayer extends HTMLElement {
 				document.addEventListener("mouseup", mouseUpHandler);
 			});
 
+			/* 
+			Checks if the audio has a valid duration.
+			Calculates where the user clicked relative to the timeline.
+			Converts that position to a percentage of the timeline's width.
+			Sets the audio's current playback time based on that percentage.
+			Visually updates the timeline to reflect the new position.
+			*/
 			function updateSeek(e) {
 				if (!audioElement.duration) return;
 
@@ -478,10 +537,11 @@ export class AudioPlayer extends HTMLElement {
 			}
 
 			setTimeout(() => {
+				// Set autoplay handler when user clicked anywhere of the document playing audio
 				const handleFirstInteraction = () => {
 					if (this.dataset.auto == "true" && audioElement.duration) {
 						audioElement.play();
-						playButton.classList.add("is-playing");
+						playButton.classList.add("sonix-is-playing");
 						audioStatus(true, "Pause");
 					}
 
@@ -489,9 +549,13 @@ export class AudioPlayer extends HTMLElement {
 				};
 
 				window.addEventListener("click", handleFirstInteraction);
-			}, 500);
+			}, 100);
+
+			if (document.querySelector(".sonix-loader")) {
+				document.querySelectorAll(".sonix-loader").forEach((loader) => loader.remove());
+			}
 		});
 	}
 }
 
-customElements.define("c-audio", AudioPlayer);
+customElements.define("sonix-player", SonixPlayer);
