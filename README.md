@@ -57,7 +57,7 @@ In your main.js or main.ts file:
 
 ```bash
     import 'sonix-player';
-    import 'sonix-player/dist/sonix-player.css';
+    import 'sonix-player/sonix-player.css';
 ```
 
 <br>
@@ -88,7 +88,7 @@ Use the component anywhere in your app (HTML syntax):
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sonix Player</title>
-  <link rel="stylesheet" href="https://unpkg.com/sonix-player@1.5.0/dist/sonix-player.css" />
+  <link rel="stylesheet" href="https://unpkg.com/sonix-player@1.5.1/dist/sonix-player.css" />
 </head>
 <body>
     <sonix-player
@@ -109,7 +109,7 @@ Use the component anywhere in your app (HTML syntax):
                     data-secondary="oklch(96.9% 0.016 293.756)">
     </sonix-player>
 
-  <script type="module" src="https://unpkg.com/sonix-player@1.5.0/dist/sonix-player.es.js"></script>
+  <script type="module" src="https://unpkg.com/sonix-player@1.5.1/dist/sonix-player.es.js"></script>
 </body>
 </html>
 

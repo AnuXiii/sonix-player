@@ -193,7 +193,7 @@ export class SonixPlayer extends HTMLElement {
 							${
 								controls.volumeControl == "true"
 									? `
-								<div class="sonix-btn-holder flex gap-4">
+								<div class="sonix-btn-holder flex">
 									<button
 										class="sonix-volume-btn"
 										title="Control volume"

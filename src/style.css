@@ -11,7 +11,7 @@
 /* sonix player container */
 .sonix-player {
 	@apply overflow-hidden text-sonix-accent bg-sonix-primary select-none;
-	@apply max-w-4xl mx-auto my-8 rounded-lg shadow-2xl;
+	@apply max-w-4xl w-full mx-auto my-8 rounded-lg shadow-2xl;
 
 	button:focus-visible {
 		@apply outline-2 outline-solid outline-sonix-secondary;
@@ -28,25 +28,21 @@
 }
 
 .sonix-thumbnail-img {
-	@apply w-40 h-40 object-cover mx-auto rounded-lg drop-shadow-2xl drop-shadow-sonix-black;
+	@apply w-28 h-28 lg:w-40 lg:h-40 object-cover mx-auto rounded-lg drop-shadow-2xl drop-shadow-sonix-black;
 }
 
 /* sonix player container inner */
 .sonix-inner {
-	@apply overflow-x-auto xl:overflow-x-hidden flex flex-col justify-between items-center md:flex-row;
+	@apply px-2 overflow-x-auto xl:overflow-x-hidden flex flex-col justify-between items-center lg:flex-row;
 
 	& > * {
-		@apply w-full md:w-auto;
+		@apply w-full lg:w-auto;
 	}
-}
-
-.sonix-info {
-	@apply p-4 md:p-0;
 }
 
 /* button holders play & repeat & volume ... */
 .sonix-btn-holder {
-	@apply relative p-4;
+	@apply relative p-2;
 
 	button:not(.sonix-play-btn) {
 		@apply flex justify-center items-center relative cursor-pointer;
@@ -105,11 +101,11 @@
 
 /* sonix player timeline container - inner - outer */
 .sonix-timeline-container {
-	@apply p-4 flex justify-center items-center gap-4 font-semibold;
+	@apply mx-0 lg:mx-4 p-4 flex justify-center items-center gap-4 font-semibold;
 }
 
 .sonix-timeline-outer {
-	@apply relative w-full md:min-w-56 h-1.5 rounded-lg bg-sonix-accent/30 cursor-pointer;
+	@apply relative w-full sm:min-w-1/2 h-1.5 rounded-lg bg-sonix-accent/30 cursor-pointer;
 
 	&:hover {
 		.sonix-timeline-inner::after {
@@ -132,7 +128,7 @@
 /* style custom range input */
 .sonix-btn-holder:focus-visible .sonix-custom-range,
 .sonix-btn-holder:hover .sonix-custom-range {
-	@apply py-4 px-3;
+	@apply py-4 px-3 ml-2;
 	width: 128px;
 	opacity: 1;
 	scale: 1;
@@ -140,7 +136,7 @@
 
 /* volume and speed container */
 .sonix-vol-speed {
-	@apply max-md:hidden;
+	@apply max-lg:hidden;
 }
 
 .sonix-custom-range {
@@ -168,15 +164,15 @@
 
 /* sonix info styles => artist name - song name - figure image */
 .sonix-info {
-	@apply py-4 flex gap-4 items-center;
+	@apply py-4 px-3 lg:pl-4 flex gap-4 items-center;
 }
 
 .sonix-figure-container {
-	@apply w-12 h-12 relative overflow-hidden;
+	@apply relative w-12 h-12 overflow-hidden;
 }
 
 .sonix-figure-img {
-	@apply object-cover aspect-square min-w-12 min-h-12 rounded-md drop-shadow-lg drop-shadow-sonix-black;
+	@apply object-cover aspect-square w-full h-full rounded-md;
 }
 
 .sonix-text-info {
