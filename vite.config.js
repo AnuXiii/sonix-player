@@ -5,10 +5,6 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
 	plugins: [tailwindcss()],
 
-	optimizeDeps: {
-		include: ["sonix-player"],
-	},
-
 	build: {
 		lib: {
 			entry: "src/sonix-player.js",
