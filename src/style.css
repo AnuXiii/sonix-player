@@ -10,8 +10,7 @@
 
 /* sonix player container */
 .sonix-player {
-	@apply overflow-hidden text-sonix-accent bg-sonix-primary select-none;
-	@apply max-w-4xl w-full mx-auto my-8 rounded-lg shadow-2xl;
+	@apply overflow-hidden text-sonix-accent bg-sonix-primary select-none rounded-lg shadow-2xl;
 
 	button:focus-visible {
 		@apply outline-2 outline-solid outline-sonix-secondary;

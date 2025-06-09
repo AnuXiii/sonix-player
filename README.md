@@ -78,40 +78,13 @@ Use the component anywhere in your app (HTML syntax):
 
 <br>
 
-## 🧪 e.g
+## 🧪 Custom Styles
 
 <br>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sonix Player</title>
-  <link rel="stylesheet" href="https://unpkg.com/sonix-player@1.5.1/dist/sonix-player.css" />
-</head>
-<body>
-    <sonix-player
-                    data-src="/phonk.mp4"
-                    data-thumbnail="/phonk.jpg"
-                    data-figure="/phonk.jpg"
-                    data-artist="phonk"
-                    data-name="phonk music"
-                    data-auto="false"
-                    data-volume="true"
-                    data-repeat="true"
-                    data-speed="true"
-                    data-max="3"
-                    data-download="true"
-                    data-black="#121212"
-                    data-accent="oklch(58.6% 0.253 17.585)"
-                    data-primary="oklch(21% 0.006 285.885)"
-                    data-secondary="oklch(96.9% 0.016 293.756)">
-    </sonix-player>
+Add own custom styles on your player with this class like => max-width - margin - padding - width and more...
 
-  <script type="module" src="https://unpkg.com/sonix-player@1.5.1/dist/sonix-player.es.js"></script>
-</body>
-</html>
+<p style="color:violet;">.sonix-player</p>
 
 <br>
 
