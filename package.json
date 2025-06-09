@@ -6,15 +6,14 @@
 	"main": "dist/sonix-player.umd.js",
 	"module": "dist/sonix-player.es.js",
 	"types": "dist/sonix-player.d.ts",
-	"style": "dist/sonix-player.css",
 	"exports": {
 		".": {
-			"style": "./dist/sonix-player.css",
 			"import": "./dist/sonix-player.es.js",
 			"require": "./dist/sonix-player.umd.js"
 		},
 		"./style.css": "./dist/sonix-player.css"
 	},
+	"style": "dist/sonix-player.css",
 	"files": [
 		"dist",
 		"src"
