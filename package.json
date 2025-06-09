@@ -3,14 +3,13 @@
 	"version": "1.6.0",
 	"private": false,
 	"type": "module",
-	"main": "./dist/sonix-player.umd.js",
-	"module": "./dist/sonix-player.es.js",
+	"main": "./dist/sonix-player.js",
+	"module": "./dist/sonix-player.js",
 	"types": "./dist/sonix-player.d.ts",
 	"style": "./dist/sonix-player.css",
 	"exports": {
 		".": {
-			"import": "./dist/sonix-player.es.js",
-			"require": "./dist/sonix-player.umd.js"
+			"import": "./dist/sonix-player.js"
 		},
 		"./style.css": "./dist/sonix-player.css"
 	},

@@ -9,8 +9,8 @@ export default defineConfig({
 		lib: {
 			entry: "src/sonix-player.js",
 			name: "SonixPlayer",
-			fileName: (format) => `sonix-player.${format}.js`,
-			formats: ["es", "umd"],
+			fileName: () => "sonix-player.js",
+			formats: ["es"],
 		},
 
 		rollupOptions: {
