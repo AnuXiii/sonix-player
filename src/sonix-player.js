@@ -1,4 +1,4 @@
-import "./style.css";
+import "./sonix-player.css";
 
 // import ion-icons used icons
 import {

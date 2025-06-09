@@ -19,6 +19,10 @@ export default defineConfig({
 				globals: {
 					ionicons: "ionicons",
 				},
+				assetFileNames: (assetInfo) => {
+					if (assetInfo.name === "sonix-player.css") return "sonix-player.css";
+					return assetInfo.name;
+				},
 			},
 		},
 	},

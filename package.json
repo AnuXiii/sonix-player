@@ -1,16 +1,19 @@
 {
 	"name": "sonix-player",
-	"version": "1.5.6",
+	"version": "1.5.2",
 	"private": false,
 	"type": "module",
-	"main": "dist/sonix-player.umd.js",
-	"module": "dist/sonix-player.es.js",
-	"types": "dist/sonix-player.d.ts",
+	"main": "./dist/sonix-player.umd.js",
+	"module": "./dist/sonix-player.es.js",
+	"types": "./dist/sonix-player.d.ts",
+	"style": "./dist/sonix-player.css",
 	"exports": {
-		".": "./dist/sonix-player.es.js",
+		".": {
+			"import": "./dist/sonix-player.es.js",
+			"require": "./dist/sonix-player.umd.js"
+		},
 		"./style.css": "./dist/sonix-player.css"
 	},
-	"style": "dist/sonix-player.css",
 	"files": [
 		"dist",
 		"src"
