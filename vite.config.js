@@ -12,6 +12,7 @@ export default defineConfig({
 			fileName: (format) => `sonix-player.${format}.js`,
 			formats: ["es", "umd"],
 		},
+
 		rollupOptions: {
 			external: ["ionicons"],
 			output: {

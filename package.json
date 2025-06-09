@@ -7,10 +7,7 @@
 	"module": "dist/sonix-player.es.js",
 	"types": "dist/sonix-player.d.ts",
 	"exports": {
-		".": {
-			"import": "./dist/sonix-player.es.js",
-			"require": "./dist/sonix-player.umd.js"
-		},
+		".": "./dist/sonix-player.es.js",
 		"./style.css": "./dist/sonix-player.css"
 	},
 	"style": "dist/sonix-player.css",
