@@ -1,5 +1,7 @@
 # 🎧 Sonix Player
 
+<a href="https://uupload.ir/](https://github.com/AnuXiii/sonix-player" target="_blank"><img src="https://s6.uupload.ir/files/sonix-thumb_8o6u.png" border="0" alt="آپلود عکس" /></a>
+
 <br>
 
 **Sonix Player** is a modern, customizable audio player built as a Web Component.  
