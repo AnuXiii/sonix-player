@@ -53,13 +53,16 @@ Install the package via npm:
 
 <br>
 
-In your main.js or main.ts file:
+In your main.js or main.tsx file:
 
 <br>
 
 ```bash
-    import 'sonix-player';
-    import 'sonix-player/sonix-player.css';
+    import SonixPlayer from "sonix-player";
+    import "sonix-player/style.css";
+
+    // Initialize the player
+    const player = new SonixPlayer();
 ```
 
 <br>
