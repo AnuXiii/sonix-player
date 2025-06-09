@@ -58,8 +58,11 @@ In your main.js or main.ts file:
 <br>
 
 ```bash
-    import 'sonix-player';
-    import 'sonix-player/sonix-player.css';
+    import SonixPlayer from "sonix-player";
+    import "sonix-player/style.css";
+
+    // Initialize the player
+    const player = new SonixPlayer();
 ```
 
 <br>
