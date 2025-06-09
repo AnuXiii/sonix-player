@@ -69,6 +69,22 @@ class SonixPlayer extends HTMLElement {
 			}
 		}
 
+		// Set audio metadata when loaded
+		audioElement.addEventListener("loadedmetadata", () => {
+			const durationValue = this.querySelector(".sonix-duration-value");
+			if (durationValue) {
+				durationValue.innerHTML = durationLoader();
+			}
+		});
+
+		// Update duration if it changes
+		audioElement.addEventListener("durationchange", () => {
+			const durationValue = this.querySelector(".sonix-duration-value");
+			if (durationValue) {
+				durationValue.innerHTML = durationLoader();
+			}
+		});
+
 		// Set thumbnail and figure data-thumbnail="/images/default.png" & data-figure="/images/default.png"
 		const cover = {
 			thumbnail: this.dataset.thumbnail || "",
@@ -185,7 +201,7 @@ class SonixPlayer extends HTMLElement {
 								<div class="sonix-timeline-inner"></div>
 							</div>
 							<div class="sonix-duration-container">
-								<span class="sonix-duration-value">0:00</span>
+								<span class="sonix-duration-value">00:00</span>
 							</div>
 						</div>
 						<!--  -->
@@ -288,7 +304,10 @@ class SonixPlayer extends HTMLElement {
 
 		// when data fully loaded catch audio duration and control autoplay audio if true or false
 		window.addEventListener("load", () => {
-			this.querySelector(".sonix-duration-value").innerHTML = durationLoader();
+			const durationValue = this.querySelector(".sonix-duration-value");
+			if (durationValue) {
+				durationValue.innerHTML = durationLoader();
+			}
 
 			// Audio status
 			function audioStatus(status, doing) {
@@ -305,6 +324,7 @@ class SonixPlayer extends HTMLElement {
 
 				// if user clicked on play button and have't data-auto="true" attribute we stopping auto-play another audio
 				const autoPlayTarget = document.querySelector("[data-auto='true']");
+
 				autoPlayTarget ? autoPlayTarget.setAttribute("data-auto", "false") : console.warn("auto-play disabled");
 
 				if (!isCurrentlyPaused) {
@@ -406,8 +426,10 @@ class SonixPlayer extends HTMLElement {
 
 				let volumeMoveHandler;
 				let volumeUpHandler;
+				let volumeTouchMoveHandler;
+				let volumeTouchEndHandler;
 
-				// Handle volume range interaction
+				// Handle volume range interaction for mouse
 				customRange.addEventListener("mousedown", (e) => {
 					isDraggingVol = true;
 					controlVolume(e);
@@ -428,6 +450,28 @@ class SonixPlayer extends HTMLElement {
 
 					document.addEventListener("mousemove", volumeMoveHandler);
 					document.addEventListener("mouseup", volumeUpHandler);
+				});
+
+				// Handle volume range interaction for touch
+				customRange.addEventListener("touchstart", (e) => {
+					e.preventDefault();
+					isDraggingVol = true;
+					controlVolume(e.touches[0]);
+
+					volumeTouchMoveHandler = (e) => {
+						if (isDraggingVol) {
+							controlVolume(e.touches[0]);
+						}
+					};
+
+					volumeTouchEndHandler = () => {
+						isDraggingVol = false;
+						document.removeEventListener("touchmove", volumeTouchMoveHandler);
+						document.removeEventListener("touchend", volumeTouchEndHandler);
+					};
+
+					document.addEventListener("touchmove", volumeTouchMoveHandler);
+					document.addEventListener("touchend", volumeTouchEndHandler);
 				});
 			}
 
@@ -494,6 +538,8 @@ class SonixPlayer extends HTMLElement {
 			// Update audio time based on click and mouse listener in timeline container
 			let mouseMoveHandler;
 			let mouseUpHandler;
+			let touchMoveHandler;
+			let touchEndHandler;
 
 			timelineOuter.addEventListener("mousedown", (e) => {
 				isDraggingTime = true;
@@ -515,6 +561,28 @@ class SonixPlayer extends HTMLElement {
 
 				document.addEventListener("mousemove", mouseMoveHandler);
 				document.addEventListener("mouseup", mouseUpHandler);
+			});
+
+			// Add touch events for timeline
+			timelineOuter.addEventListener("touchstart", (e) => {
+				e.preventDefault();
+				isDraggingTime = true;
+				updateSeek(e.touches[0]);
+
+				touchMoveHandler = (e) => {
+					if (isDraggingTime) {
+						updateSeek(e.touches[0]);
+					}
+				};
+
+				touchEndHandler = () => {
+					isDraggingTime = false;
+					document.removeEventListener("touchmove", touchMoveHandler);
+					document.removeEventListener("touchend", touchEndHandler);
+				};
+
+				document.addEventListener("touchmove", touchMoveHandler);
+				document.removeEventListener("touchend", touchEndHandler);
 			});
 
 			/* 

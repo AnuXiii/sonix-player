@@ -78,7 +78,7 @@
 		}
 	}
 
-	&:hover:not(.sonix-is-playing),
+	&:target:not(.sonix-is-playing),
 	&.sonix-is-playing {
 		.sonix-icon {
 			@apply opacity-0 -translate-y-full;
