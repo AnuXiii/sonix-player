@@ -32,7 +32,7 @@ let isDraggingTime = false;
 // Keep track when user is dragging in the volume control
 let isDraggingVol = false;
 
-export class SonixPlayer extends HTMLElement {
+class SonixPlayer extends HTMLElement {
 	connectedCallback() {
 		// Check if this element wants to auto-play
 		if (this.dataset.auto === "true") {
@@ -559,3 +559,4 @@ export class SonixPlayer extends HTMLElement {
 }
 
 customElements.define("sonix-player", SonixPlayer);
+export default SonixPlayer;
