@@ -13,7 +13,7 @@ import {
 } from "ionicons/icons";
 
 /* ion icons have a problem when used this way ${icon} return a type of URL data:image */
-function iconSpliter(iconName) {
+function splitIcon(iconName) {
 	return iconName.split(",")[1];
 }
 
@@ -54,7 +54,7 @@ class SonixPlayer extends HTMLElement {
 		allAudioElements.push(audioElement);
 
 		// Function to calculating audio minutes and seconds
-		function durationLoader() {
+		function formatDuration() {
 			if (audioElement.duration) {
 				const totalSeconds = Math.floor(audioElement.duration);
 				const minutes = Math.floor(totalSeconds / 60);
@@ -73,7 +73,7 @@ class SonixPlayer extends HTMLElement {
 		audioElement.addEventListener("loadedmetadata", () => {
 			const durationValue = this.querySelector(".sonix-duration-value");
 			if (durationValue) {
-				durationValue.innerHTML = durationLoader();
+				durationValue.innerHTML = formatDuration();
 			}
 		});
 
@@ -81,7 +81,7 @@ class SonixPlayer extends HTMLElement {
 		audioElement.addEventListener("durationchange", () => {
 			const durationValue = this.querySelector(".sonix-duration-value");
 			if (durationValue) {
-				durationValue.innerHTML = durationLoader();
+				durationValue.innerHTML = formatDuration();
 			}
 		});
 
@@ -166,10 +166,10 @@ class SonixPlayer extends HTMLElement {
 									aria-label="Play current"
 									tabindex="0">
 									<span class="sonix-icon">
-										${iconSpliter(play)}
+										${splitIcon(play)}
 									</span>
 									<span class="sonix-icon">
-										${iconSpliter(pause)}
+										${splitIcon(pause)}
 									</span>
 								</button>
 						</div>
@@ -184,7 +184,7 @@ class SonixPlayer extends HTMLElement {
 									aria-label="Repeat current"
 									tabindex="0">
 									<span class="sonix-icon">
-										${iconSpliter(repeatOutline)}
+										${splitIcon(repeatOutline)}
 									</span>
 								</button>
 							</div>
@@ -216,7 +216,7 @@ class SonixPlayer extends HTMLElement {
 										aria-label="Control volume"
 										tabindex="0">
 										<span class="sonix-icon">
-											${iconSpliter(volumeHigh)}
+											${splitIcon(volumeHigh)}
 										</span>
 									</button>
 									<div
@@ -243,7 +243,7 @@ class SonixPlayer extends HTMLElement {
 										data-value="1">
 										<span class="sonix-icon">
 											<span class="sonix-speed-value">1x</span>
-											${iconSpliter(playForwardOutline)}
+											${splitIcon(playForwardOutline)}
 										</span>
 									</button>
 								</div>
@@ -253,7 +253,7 @@ class SonixPlayer extends HTMLElement {
 						</div>
 						<!--  -->
 						<div class="flex justify-between items-center flex-1">
-							<div class="sonix-info">
+							<div class="sonix-info ${canDownload == "false" ? "lg:justify-center w-full" : ""}">
 							${
 								cover.figure !== ""
 									? `
@@ -290,7 +290,7 @@ class SonixPlayer extends HTMLElement {
 										aria-label="Download audio"
 										tabindex="0">
 										<span class="sonix-icon">
-											${iconSpliter(cloudDownload)}
+											${splitIcon(cloudDownload)}
 										</span>
 									</button>
 								</div>
@@ -304,28 +304,33 @@ class SonixPlayer extends HTMLElement {
 
 		// when data fully loaded catch audio duration and control autoplay audio if true or false
 		window.addEventListener("load", () => {
+			// find duration value element and place audio duration inner
 			const durationValue = this.querySelector(".sonix-duration-value");
-			if (durationValue) {
-				durationValue.innerHTML = durationLoader();
-			}
+			durationValue ? (durationValue.innerHTML = formatDuration()) : "";
+
+			const playButton = this.querySelector(".sonix-play-btn");
+			// Attached controlPlayStatus() function to play button
+			playButton.addEventListener("click", handlePlayPause);
 
 			// Audio status
-			function audioStatus(status, doing) {
+			function updateAudioStatus(status, doing) {
 				isPlaying = status;
 				playButton.title = `${doing} current`;
 				playButton.ariaLabel = `${doing} current`;
 			}
 
-			// Initialize Play & Pause Control
-			const playButton = this.querySelector(".sonix-play-btn");
-
-			playButton.addEventListener("click", () => {
+			// Function to Play & Pause Control
+			function handlePlayPause() {
 				const isCurrentlyPaused = playButton.classList.contains("sonix-is-playing");
 
 				// if user clicked on play button and have't data-auto="true" attribute we stopping auto-play another audio
-				const autoPlayTarget = document.querySelector("[data-auto='true']");
+				if (this.dataset.auto == "false" || !this.dataset.auto) {
+					const autoPlayTarget = document.querySelector("[data-auto='true']");
+					autoPlayTarget?.setAttribute("data-auto", "false");
+					autoPlayTarget ? console.warn("auto-play disabled") : "";
+				}
 
-				autoPlayTarget ? autoPlayTarget.setAttribute("data-auto", "false") : console.warn("auto-play disabled");
+				if (!audioElement.duration) return;
 
 				if (!isCurrentlyPaused) {
 					// Pause all other audio elements
@@ -340,35 +345,38 @@ class SonixPlayer extends HTMLElement {
 					});
 					// Add sonix-is-playing class only to the current button
 					playButton.classList.add("sonix-is-playing");
-					if (audioElement.duration) {
-						audioElement.play();
-					}
-					audioStatus(true, "Pause");
+					audioElement.play();
+					updateAudioStatus(true, "Pause");
 				} else {
 					playButton.classList.remove("sonix-is-playing");
 					audioElement.pause();
-					audioStatus(false, "Play");
+					updateAudioStatus(false, "Play");
 				}
-			});
+			}
 
-			// Initialize Repeat
 			const repeatButton = this.querySelector(".sonix-repeat-btn");
-			repeatButton?.addEventListener("click", () => {
+			// Attached repeactController to repeat button
+			repeatButton?.addEventListener("click", handleRepeat);
+
+			function handleRepeat() {
 				const isRepeat = repeatButton.classList.toggle("sonix-active");
 				if (isRepeat) {
 					audioElement.loop = true;
 				} else {
 					audioElement.loop = false;
 				}
-			});
+			}
+
+			// add timeupdate event to all audio elements
+			audioElement.addEventListener("timeupdate", updatePlaybackTime);
+			audioElement.addEventListener("timeupdate", handlePlaybackEnd);
 
 			// Initialize Audio Time
 			const currentTime = this.querySelector(".sonix-current-time-value");
 			const timelineOuter = this.querySelector(".sonix-timeline-outer");
 			const timelineInner = this.querySelector(".sonix-timeline-inner");
 
-			// add timeupdate event to all audio elements
-			audioElement.addEventListener("timeupdate", () => {
+			function updatePlaybackTime() {
 				// calculating audio current time and duration
 				let percent = (audioElement.currentTime / audioElement.duration) * 100;
 				const audioCurrentTime = Math.floor(audioElement.currentTime);
@@ -384,19 +392,21 @@ class SonixPlayer extends HTMLElement {
 
 				// add number value to width of the timeline inner
 				timelineInner.style.width = `${percent}%`;
+			}
 
+			function handlePlaybackEnd() {
 				// if current time and duration are equal sonix-is-playing removed and audio status changed
-				if (audioElement.currentTime === audioElement.duration) {
-					// if loop activated keep playing current the sound
-					if (audioElement.loop === true) {
-						audioStatus(true, "Pause");
-					} else {
-						// if loop not activated stopping the current sound
-						audioStatus(false, "Play");
-						playButton.classList.toggle("sonix-is-playing");
-					}
+				if (audioElement.currentTime !== audioElement.duration) return;
+
+				// if loop activated keep playing current the sound
+				if (audioElement.loop === true) {
+					updateAudioStatus(true, "Pause");
+				} else {
+					// if loop not activated stopping the current sound
+					updateAudioStatus(false, "Play");
 				}
-			});
+				playButton.classList.remove("sonix-is-playing");
+			}
 
 			// Initialize volume control
 			const volumeButton = this.querySelector(".sonix-volume-btn");
@@ -404,25 +414,27 @@ class SonixPlayer extends HTMLElement {
 			const customRange = this.querySelector(".sonix-custom-range");
 			const customRangeInner = this.querySelector(".sonix-custom-range-inner");
 
-			// Set initial volume
 			if (volumeButton) {
+				// Set initial volume
 				audioElement.volume = 1;
 				customRangeInner.style.width = "100%";
 
 				// Handle volume button click - unmute or muted
-				volumeButton.addEventListener("click", () => {
+
+				volumeButton.addEventListener("click", handleVolumeToggle);
+				function handleVolumeToggle() {
 					if (!audioElement.muted) {
 						audioElement.volume = 0;
 						audioElement.muted = true;
 						customRangeInner.style.width = "0%";
-						volumeIcon.innerHTML = iconSpliter(volumeMute);
+						volumeIcon.innerHTML = splitIcon(volumeMute);
 					} else {
 						audioElement.volume = 1;
 						audioElement.muted = false;
 						customRangeInner.style.width = "100%";
-						volumeIcon.innerHTML = iconSpliter(volumeHigh);
+						volumeIcon.innerHTML = splitIcon(volumeHigh);
 					}
-				});
+				}
 
 				let volumeMoveHandler;
 				let volumeUpHandler;
@@ -430,14 +442,16 @@ class SonixPlayer extends HTMLElement {
 				let volumeTouchEndHandler;
 
 				// Handle volume range interaction for mouse
-				customRange.addEventListener("mousedown", (e) => {
+				customRange.addEventListener("mousedown", (e) => handleVolumeMouse(e));
+
+				function handleVolumeMouse(e) {
 					isDraggingVol = true;
-					controlVolume(e);
+					updateVolume(e);
 
 					// Add event listeners only when dragging starts
 					volumeMoveHandler = (e) => {
 						if (isDraggingVol) {
-							controlVolume(e);
+							updateVolume(e);
 						}
 					};
 
@@ -450,66 +464,66 @@ class SonixPlayer extends HTMLElement {
 
 					document.addEventListener("mousemove", volumeMoveHandler);
 					document.addEventListener("mouseup", volumeUpHandler);
-				});
+				}
 
-				// Handle volume range interaction for touch
-				customRange.addEventListener("touchstart", (e) => {
+				customRange.addEventListener("touchstart", (e) => handleVolumeTouch(e));
+				function handleVolumeTouch(e) {
 					e.preventDefault();
 					isDraggingVol = true;
-					controlVolume(e.touches[0]);
+					updateVolume(e.touches[0]);
 
 					volumeTouchMoveHandler = (e) => {
 						if (isDraggingVol) {
-							controlVolume(e.touches[0]);
+							updateVolume(e.touches[0]);
 						}
 					};
 
 					volumeTouchEndHandler = () => {
 						isDraggingVol = false;
-						document.removeEventListener("touchmove", volumeTouchMoveHandler);
-						document.removeEventListener("touchend", volumeTouchEndHandler);
+						customRangeInner.removeEventListener("touchmove", volumeTouchMoveHandler);
+						customRangeInner.removeEventListener("touchend", volumeTouchEndHandler);
 					};
 
-					document.addEventListener("touchmove", volumeTouchMoveHandler);
-					document.addEventListener("touchend", volumeTouchEndHandler);
-				});
+					customRangeInner.addEventListener("touchmove", volumeTouchMoveHandler);
+					customRangeInner.addEventListener("touchend", volumeTouchEndHandler);
+				}
 			}
 
 			// control sound volume based on mouse listener
-			function controlVolume(e) {
+			function updateVolume(e) {
 				const rect = customRange.getBoundingClientRect();
 				const width = rect.width;
 				const x = Math.max(0, Math.min(e.clientX - rect.left, width));
 				const volume = Math.max(0, Math.min(1, x / width));
 
 				// Ensure volume is a valid number between 0 and 1
-				if (isFinite(volume)) {
-					audioElement.volume = volume;
-					customRangeInner.style.width = `${volume * 100}%`;
+				if (!isFinite(volume)) return;
 
-					// Update volume icon based on level
-					if (volume === 0) {
-						volumeIcon.innerHTML = iconSpliter(volumeMute);
-						audioElement.muted = true;
-					} else if (volume < 0.5) {
-						volumeIcon.innerHTML = iconSpliter(volumeMedium);
-					} else {
-						audioElement.muted = false;
-						volumeIcon.innerHTML = iconSpliter(volumeHigh);
-					}
+				audioElement.volume = volume;
+				customRangeInner.style.width = `${volume * 100}%`;
+
+				// Update volume icon based on level
+				if (volume === 0) {
+					volumeIcon.innerHTML = splitIcon(volumeMute);
+					audioElement.muted = true;
+				} else if (volume < 0.5) {
+					volumeIcon.innerHTML = splitIcon(volumeMedium);
+				} else {
+					audioElement.muted = false;
+					volumeIcon.innerHTML = splitIcon(volumeHigh);
 				}
 			}
 
 			// Handle Audio Speed Controls
 			const speedButton = this.querySelector(".sonix-speed-btn");
-			speedButton?.addEventListener("click", handleSpeed);
+			speedButton?.addEventListener("click", updatePlaybackSpeed);
 
 			/**
 			 * This function retrieves the current playback speed from the speed button's dataset,
 			 * increments it by 0.5 (or resets to the minimum speed if the maximum is reached),
 			 * updates the audio element's playback rate, and updates the displayed speed value.
 			 */
-			function handleSpeed() {
+			function updatePlaybackSpeed() {
 				let currentSpeed = parseFloat(speedButton.dataset.value);
 				currentSpeed = currentSpeed >= parseFloat(speedControl.maxSpeed) ? speedControl.minSpeed : currentSpeed + 0.5;
 
@@ -522,17 +536,16 @@ class SonixPlayer extends HTMLElement {
 			}
 
 			// Control download button
-			if (audioElement.duration) {
-				this.querySelector(".sonix-download-btn")?.addEventListener("click", () => {
-					if (canDownload == "true") {
-						const a = document.createElement("a");
-						a.href = audioElement.src;
-						a.download = textDisplays.name;
-						a.click();
-					}
-				});
-			} else {
-				console.warn("audio source not found check data-src please");
+			this.querySelector(".sonix-download-btn")?.addEventListener("click", handleDownload);
+			function handleDownload() {
+				if (audioElement.duration) {
+					const a = document.createElement("a");
+					a.href = audioElement.src;
+					a.download = textDisplays.name;
+					a.click();
+				} else {
+					console.warn("audio source not found check data-src please");
+				}
 			}
 
 			// Update audio time based on click and mouse listener in timeline container
@@ -541,14 +554,16 @@ class SonixPlayer extends HTMLElement {
 			let touchMoveHandler;
 			let touchEndHandler;
 
-			timelineOuter.addEventListener("mousedown", (e) => {
+			timelineOuter.addEventListener("mousedown", (e) => handleTimelineMouse(e));
+
+			function handleTimelineMouse(e) {
 				isDraggingTime = true;
-				updateSeek(e);
+				updateSeekPosition(e);
 
 				// Add event listeners only when dragging starts
 				mouseMoveHandler = (e) => {
 					if (isDraggingTime) {
-						updateSeek(e);
+						updateSeekPosition(e);
 					}
 				};
 
@@ -561,29 +576,30 @@ class SonixPlayer extends HTMLElement {
 
 				document.addEventListener("mousemove", mouseMoveHandler);
 				document.addEventListener("mouseup", mouseUpHandler);
-			});
+			}
 
-			// Add touch events for timeline
-			timelineOuter.addEventListener("touchstart", (e) => {
-				e.preventDefault();
+			timelineOuter.addEventListener("touchstart", (e) => handleTimelineTouch(e));
+
+			function handleTimelineTouch(e) {
 				isDraggingTime = true;
-				updateSeek(e.touches[0]);
+				updateSeekPosition(e.touches[0]);
 
 				touchMoveHandler = (e) => {
-					if (isDraggingTime) {
-						updateSeek(e.touches[0]);
+					if (isDraggingTime && e.cancelable) {
+						e.preventDefault();
+						updateSeekPosition(e.touches[0]);
 					}
 				};
 
 				touchEndHandler = () => {
 					isDraggingTime = false;
-					document.removeEventListener("touchmove", touchMoveHandler);
-					document.removeEventListener("touchend", touchEndHandler);
+					timelineOuter.removeEventListener("touchmove", touchMoveHandler);
+					timelineOuter.removeEventListener("touchend", touchEndHandler);
 				};
 
-				document.addEventListener("touchmove", touchMoveHandler);
-				document.removeEventListener("touchend", touchEndHandler);
-			});
+				timelineOuter.addEventListener("touchmove", touchMoveHandler);
+				timelineOuter.removeEventListener("touchend", touchEndHandler);
+			}
 
 			/* 
 			Checks if the audio has a valid duration.
@@ -592,7 +608,7 @@ class SonixPlayer extends HTMLElement {
 			Sets the audio's current playback time based on that percentage.
 			Visually updates the timeline to reflect the new position.
 			*/
-			function updateSeek(e) {
+			function updateSeekPosition(e) {
 				if (!audioElement.duration) return;
 
 				const rect = timelineOuter.getBoundingClientRect();
@@ -606,17 +622,17 @@ class SonixPlayer extends HTMLElement {
 
 			setTimeout(() => {
 				// Set autoplay handler when user clicked anywhere of the document playing audio
-				const handleFirstInteraction = () => {
+				const handleAutoPlay = () => {
 					if (this.dataset.auto == "true" && audioElement.duration) {
 						audioElement.play();
 						playButton.classList.add("sonix-is-playing");
-						audioStatus(true, "Pause");
+						updateAudioStatus(true, "Pause");
 					}
 
-					window.removeEventListener("click", handleFirstInteraction);
+					window.removeEventListener("click", handleAutoPlay);
 				};
 
-				window.addEventListener("click", handleFirstInteraction);
+				window.addEventListener("click", handleAutoPlay);
 			}, 100);
 
 			if (document.querySelector(".sonix-loader")) {

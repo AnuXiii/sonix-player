@@ -64,7 +64,15 @@
 
 /* play & pause button */
 .sonix-play-btn {
-	@apply p-2 bg-sonix-accent text-sonix-primary rounded-full overflow-hidden flex justify-center items-center relative cursor-pointer size-12;
+	@apply p-2 bg-sonix-accent text-sonix-primary rounded-full overflow-hidden flex justify-center items-center relative cursor-pointer size-12 duration-100;
+
+	&:hover:not(.sonix-is-playing) {
+		@apply bg-sonix-secondary;
+
+		svg {
+			@apply fill-sonix-accent;
+		}
+	}
 
 	.sonix-icon {
 		@apply duration-300 absolute flex justify-center items-center;
@@ -78,22 +86,19 @@
 		}
 	}
 
-	&:target:not(.sonix-is-playing),
 	&.sonix-is-playing {
+		@apply bg-sonix-secondary;
+
 		.sonix-icon {
 			@apply opacity-0 -translate-y-full;
+
+			svg {
+				@apply fill-sonix-accent;
+			}
 
 			&:nth-child(2) {
 				@apply opacity-100 translate-y-0;
 			}
-		}
-	}
-
-	&.sonix-is-playing {
-		@apply bg-sonix-secondary;
-
-		svg {
-			@apply fill-sonix-accent;
 		}
 	}
 }
@@ -106,7 +111,8 @@
 .sonix-timeline-outer {
 	@apply relative w-full sm:min-w-1/2 h-1.5 rounded-lg bg-sonix-accent/30 cursor-pointer;
 
-	&:hover {
+	&:hover,
+	&:target {
 		.sonix-timeline-inner::after {
 			scale: 1;
 			opacity: 1;
@@ -126,7 +132,8 @@
 
 /* style custom range input */
 .sonix-btn-holder:focus-visible .sonix-custom-range,
-.sonix-btn-holder:hover .sonix-custom-range {
+.sonix-btn-holder:hover .sonix-custom-range,
+.sonix-btn-holder:target .sonix-custom-range {
 	@apply py-4 px-3 ml-2;
 	width: 128px;
 	opacity: 1;
