@@ -183,7 +183,3 @@ Your support helps improve and grow this project ❤️
 <br>
 
 <br>
-
-### sonix-player website will be coming up soon 🔜
-
-<br>
